@@ -15,6 +15,7 @@
 #include "offset-scan.h"
 #include "globals.h"
 #include "heap.h"
+#include "pretty-print.h"
 
 enum {
     pipe_read,
@@ -75,7 +76,7 @@ int mysql_offset_scan(void){
         goto end;
     }
 
-    printf("[*] executing mysql ...\n");
+    info("executing mysql ...\n");
 
     pid = fork();
     if(pid == 0){
@@ -93,7 +94,7 @@ int mysql_offset_scan(void){
     if(read(pipefd[pipe_read], &tpid, sizeof(pid_t)) != sizeof(pid_t))
         goto end;
 
-    printf("[+] pid = %d\n", tpid);
+    info("pid = %d\n", tpid);
 
     // attach the process
     if(ptrace(PTRACE_ATTACH, tpid) == -1)
@@ -104,7 +105,7 @@ int mysql_offset_scan(void){
 
     ptrace(PTRACE_SETOPTIONS, tpid, 0, PTRACE_O_TRACESYSGOOD);
 
-    printf("[*] waiting syscall exit_group\n");
+    info("waiting syscall exit_group\n");
 
 
     while(ptrace(PTRACE_SYSCALL, tpid, 0, 0) != -1){
@@ -114,46 +115,48 @@ int mysql_offset_scan(void){
         if(WIFSTOPPED(status) && WSTOPSIG(status) & 0x80){
             syscallnr = ptrace(PTRACE_PEEKUSER, tpid, 8*ORIG_RAX);
             if(syscallnr == __NR_exit_group){
-                printf("[+] exit detected !!!\n");
+                good("exit detected !!!\n");
                 break;
             }
         }
     }
 
-    printf("[*] getting heap info\n");
+    info("getting heap info\n");
 
     if(getheapmap(tpid, &heap) == 0){
-        printf("[*] reading the heap ...\n");
+        info("reading the heap ...\n");
         size_t len = heap.end_addr-heap.start_addr;
         char *dump = malloc(len);
         if(dump == NULL){
-            printf("[-] malloc() failed\n");
+            bad("malloc() failed\n");
             goto end;
         }
 
         n = memreadfunc(tpid, dump, len, heap.start_addr);
         if(n <= 0){
-            printf("[-] failed to read heap\n");
+            bad("failed to read heap\n");
             goto end;
         }
 
         if(ignotum_search(&search, 0, dump, n, "r0ck4w4y b34ch", 15)){
             ret = 0;
-            printf("[+] password found\n");
-            printf("[*] offset list: ");
+            good("password found\n");
+            good("offset list: ");
 
+            printf(GREEN);
             for(i=0; i<search.len; i++){
                 printf("0x%lx", search.addrs[i]);
                 if(i+1 < search.len)
                     putchar(',');
             }
+            printf(RESET);
 
             putchar('\n');
         } else {
-            printf("[-] failed to find password ...\n");
+            bad("failed to find password ...\n");
         }
     } else {
-        printf("[-] failed to get heap\n");
+        bad("failed to get heap\n");
     }
 
     ptrace(PTRACE_DETACH, tpid, 0, 0);

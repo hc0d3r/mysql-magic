@@ -3,7 +3,7 @@ LDFLAGS+=-lutil
 
 OBJS = src/connection-listen.o src/generic-list.o \
 	src/offset-scan.o src/dump-password.o src/mysql-magic.o \
-	src/heap.o
+	src/heap.o src/pretty-print.o
 
 all: ignotum/lib/libignotum.a mysql-magic
 

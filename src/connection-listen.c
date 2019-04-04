@@ -8,6 +8,7 @@
 #include <err.h>
 
 #include "connection-listen.h"
+#include "pretty-print.h"
 #include "generic-list.h"
 #include "dump-password.h"
 #include "globals.h"
@@ -51,7 +52,7 @@ void get_inode_list(pid_t pid, generic_list_t *out){
 
     dir = opendir(fdpath);
     if(dir == NULL){
-        warn("failed to open %s", fdpath);
+        bad("failed to open %s", fdpath);
         return;
     }
 
@@ -142,7 +143,7 @@ int wait_for_connections(off_t *offset, int stime){
     init_generic_list(clist);
     set_list_type(clist, struct conn_info);
 
-    printf("[*] waiting for connections\n");
+    info("waiting for connections\n");
 
     // skip the header
     while(fseek(fh, 150, SEEK_SET) == 0){
@@ -185,8 +186,8 @@ int wait_for_connections(off_t *offset, int stime){
 
             putchar('\n');
 
-            printf("[+] new connection found\n");
-            printf("[*] looking for mysql processes\n");
+            good("new connection found\n");
+            info("looking for mysql processes\n");
 
             get_mysql_procs(&plist);
 
@@ -216,7 +217,7 @@ int wait_for_connections(off_t *offset, int stime){
             }
 
             free_generic_list(plist);
-            printf("[*] finish\n");
+            info("finish\n");
         }
 
         sleep(stime);
