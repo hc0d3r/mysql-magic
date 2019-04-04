@@ -15,12 +15,4 @@ typedef struct options {
     int cptrace;
 } options_t;
 
-
-/*
-off_t *addrs;
-char *ofolder;
-
-
-*/
-
 #endif

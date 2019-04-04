@@ -59,16 +59,12 @@ off_t *parser_offset(char *str){
 }
 
 int main(int argc, char **argv){
-    //char *ofolder, *pstr;
     off_t *offset;
 
     pid_t pid = 0;
     char *pstr;
     int opt;
-    // help();
-    // o:sd:lr:p
 
-    //memreadfunc = ignotum_mem_read;
     opts.stime = 3;
 
     while((opt = getopt(argc, argv, "o:sd:lr:p")) != -1){

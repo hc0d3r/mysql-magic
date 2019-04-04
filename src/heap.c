@@ -20,7 +20,6 @@ int getheapmap(pid_t pid, ignotum_mapinfo_t *heap){
 
         if(!strcmp(pathname, "[heap]")){
             memcpy(heap, maplist.maps+i, sizeof(ignotum_mapinfo_t));
-            // heap->pathname = strdup(pathname);
             ret = 0;
 
             goto end;
