@@ -1,5 +1,5 @@
-CFLAGS=-Wall -Wextra -Iignotum/src
-LDFLAGS=-lutil
+CFLAGS+=-Wall -Wextra -Iignotum/src
+LDFLAGS+=-lutil
 
 OBJS = src/connection-listen.o src/generic-list.o \
 	src/offset-scan.o src/dump-password.o src/mysql-magic.o \
