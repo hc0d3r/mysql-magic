@@ -8,6 +8,24 @@ The main goal is get the password passed through tty, but sometimes it also gets
 
 Tested in `mysql  Ver 15.1 Distrib 10.3.13-MariaDB, for Linux (x86_64) using readline 5.1`
 
+# Compiling
+
+for compile you only need to run `make`, if you want add some flags, for any reason, you can do that with `CFLAGS=myflags make`
+
+# Options
+
+```
+mysql-magic [options] <pid>
+ -o <offset>  comma-separated list of offset
+ -s            search the memory for passwords and get offset
+ -d <dir>      Write heap to the folder
+ -l            Listen mode, wait for outgoing ipv4 connections on port 3306
+ -r <secs>     Sleep time (Default: 3 seconds)
+ -p            Use process_vm_readv instead of /proc/pid/mem
+```
+
+pass `-d` is a good thing to do, the password, and some informations like old queries, can remain in memory, so you can analyse this and maybe build a wordlist based on it, if the password don't are in the offset
+
 # Demo
 
-![](https://media.giphy.com/media/ZYQCJs3873q6kvJcDO/giphy.gif)
+![](https://raw.githubusercontent.com/hc0d3r/mysql-magic/demo/demo.gif)
