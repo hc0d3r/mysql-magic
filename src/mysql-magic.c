@@ -21,7 +21,7 @@ void help(void){
         "mysql-magic [options] <pid>\n"
         " -o <offset>  comma-separated list of offset\n"
         " -s            search the memory for passwords and get offset\n"
-        //" -d <dir>      Write heap to the folder\n"
+        " -d <dir>      Write heap to the folder\n"
         " -l            Listen mode, wait for outgoing ipv4 connections on port 3306\n"
         " -r <secs>     Sleep time (Default: 3 seconds)\n"
         " -p            Use process_vm_readv instead of /proc/pid/mem";
@@ -76,7 +76,7 @@ int main(int argc, char **argv){
                 opts.scan = 1;
                 break;
             case 'd':
-                opts.basedir = optarg;
+                output_folder = optarg;
                 break;
             case 'l':
                 opts.listen = 1;

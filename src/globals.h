@@ -12,4 +12,5 @@
 #endif
 
 extern ssize_t (*memreadfunc)(pid_t, void *, size_t, off_t);
+extern char *output_folder;
 extern uid_t uid;
