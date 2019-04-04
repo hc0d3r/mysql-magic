@@ -17,4 +17,5 @@ ignotum/lib/libignotum.a:
 	$(MAKE) -C ignotum lib/libignotum.a
 
 clean:
+	$(MAKE) -C ignotum clean
 	rm -f mysql-magic $(OBJS)
