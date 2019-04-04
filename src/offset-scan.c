@@ -17,6 +17,12 @@
 #include "heap.h"
 #include "pretty-print.h"
 
+#if defined(__i386)
+ #define SYSCALLREG ORIG_EAX
+#else
+ #define SYSCALLREG ORIG_RAX
+#endif
+
 enum {
     pipe_read,
     pipe_write
@@ -113,7 +119,7 @@ int mysql_offset_scan(void){
             break;
 
         if(WIFSTOPPED(status) && WSTOPSIG(status) & 0x80){
-            syscallnr = ptrace(PTRACE_PEEKUSER, tpid, 8*ORIG_RAX);
+            syscallnr = ptrace(PTRACE_PEEKUSER, tpid, sizeof(long)*SYSCALLREG);
             if(syscallnr == __NR_exit_group){
                 good("exit detected !!!\n");
                 break;
