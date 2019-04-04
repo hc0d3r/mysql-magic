@@ -19,8 +19,8 @@ options_t opts;
 void help(void){
     const char *banner =
         "mysql-magic [options] <pid>\n"
-        " -o <offset>  comma-separated list of offset\n"
-        " -s            search the memory for passwords and get offset\n"
+        " -o <offset>   Comma-separated list of offset\n"
+        " -s            Search the memory for passwords and get offset\n"
         " -d <dir>      Write heap to the folder\n"
         " -l            Listen mode, wait for outgoing ipv4 connections on port 3306\n"
         " -r <secs>     Sleep time (Default: 3 seconds)\n"
