@@ -9,6 +9,6 @@ struct conn_info {
     int checked;
 };
 
-int wait_for_connections(off_t *offset);
+int wait_for_connections(off_t *offset, int stime);
 
 #endif

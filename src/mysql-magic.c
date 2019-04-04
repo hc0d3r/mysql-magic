@@ -23,7 +23,7 @@ void help(void){
         " -s            search the memory for passwords and get offset\n"
         //" -d <dir>      Write heap to the folder\n"
         " -l            Listen mode, wait for outgoing ipv4 connections on port 3306\n"
-        //" -r <secs>     Time to sleep (Default: 3 seconds)\n"
+        " -r <secs>     Sleep time (Default: 3 seconds)\n"
         " -p            Use process_vm_readv instead of /proc/pid/mem";
 
     puts(banner);
@@ -69,6 +69,7 @@ int main(int argc, char **argv){
     // o:sd:lr:p
 
     //memreadfunc = ignotum_mem_read;
+    opts.stime = 3;
 
     while((opt = getopt(argc, argv, "o:sd:lr:p")) != -1){
         switch(opt){
@@ -131,7 +132,7 @@ int main(int argc, char **argv){
     uid = getuid();
 
     if(opts.listen)
-        wait_for_connections(offset);
+        wait_for_connections(offset, opts.stime);
 
     return 0;
 }

@@ -113,7 +113,7 @@ void get_mysql_procs(generic_list_t *out){
     closedir(dir);
 }
 
-int wait_for_connections(off_t *offset){
+int wait_for_connections(off_t *offset, int stime){
     generic_list_t clist, plist, inolist;
     struct conn_info cinfo, *aux;
 
@@ -219,7 +219,7 @@ int wait_for_connections(off_t *offset){
             printf("[*] finish\n");
         }
 
-        sleep(3);
+        sleep(stime);
     }
 
     free_generic_list(clist);
