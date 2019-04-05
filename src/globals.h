@@ -1,8 +1,13 @@
 #ifndef _GLOBALS_H_
 #define _GLOBALS_H_
 
-#ifndef MYSQL_CLI
+#define stringfy(x) _stringfy(x)
+#define _stringfy(x) #x
+
+#ifndef MYSQLCLI
  #define MYSQL_CLI "/usr/bin/mysql"
+#else
+ #define MYSQL_CLI stringfy(MYSQLCLI)
 #endif
 
 #define MYSQL_LEN sizeof(MYSQL_CLI)

@@ -10,7 +10,10 @@ Tested in `mysql  Ver 15.1 Distrib 10.3.13-MariaDB, for Linux (x86_64) using rea
 
 # Compiling
 
-for compile you only need to run `make`, if you want add some flags, for any reason, you can do that with `CFLAGS=myflags make`
+for compile you only need to run `make`, if you want add some flags, for any reason, you can do that with `CFLAGS=myflags make`.
+
+if the system mysql client is not placed at `/usr/bin/mysql` you'll need compile with
+`CFLAGS=-DMYSQLCLI=/path/to/mysql make`
 
 # Options
 

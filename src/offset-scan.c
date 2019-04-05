@@ -82,7 +82,7 @@ int mysql_offset_scan(void){
         goto end;
     }
 
-    info("executing mysql ...\n");
+    info("executing mysql (%s) ...\n", MYSQL_CLI);
 
     pid = fork();
     if(pid == 0){
