@@ -8,7 +8,7 @@ OBJS = src/connection-listen.o src/generic-list.o \
 all: ignotum/lib/libignotum.a mysql-magic
 
 mysql-magic: $(OBJS) ignotum/lib/libignotum.a
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 	@strip mysql-magic
 
 src/%.o: src/%.c
