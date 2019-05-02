@@ -1,4 +1,5 @@
 CFLAGS+=-Wall -Wextra -Iignotum/src
+LDLIBS+=-lutil
 
 OBJS = src/connection-listen.o src/generic-list.o \
 	src/offset-scan.o src/dump-password.o src/mysql-magic.o \
@@ -7,7 +8,7 @@ OBJS = src/connection-listen.o src/generic-list.o \
 all: ignotum/lib/libignotum.a mysql-magic
 
 mysql-magic: $(OBJS) ignotum/lib/libignotum.a
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ -lutil
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 	@strip mysql-magic
 
 src/%.o: src/%.c
