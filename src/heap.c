@@ -12,7 +12,7 @@ int getheapmap(pid_t pid, ignotum_mapinfo_t *heap){
     int ret = 1;
     size_t i;
 
-    ignotum_getmaplist(pid, &maplist);
+    ignotum_getmaplist(&maplist, pid);
     for(i=0; i<maplist.len; i++){
         char *pathname = maplist.maps[i].pathname;
         if(pathname == NULL)
